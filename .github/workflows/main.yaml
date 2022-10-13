@@ -7,7 +7,7 @@ jobs:
     permissions:
       pull-requests: read
     outputs:
-      sample_1: ${{ steps.filter.outputs.sample_1 }}
+      sample_1_libs: ${{ steps.filter.outputs.sample_1_libs }}
       sample_2: ${{ steps.filter.outputs.sample_2 }}
     steps:
     - uses: actions/checkout@v3 # necessary?
@@ -15,8 +15,9 @@ jobs:
       id: filter
       with:
         filters: |
-          sample_1:
+          sample_1_libs:
             - 'sample_1/libs/**'
+          sample_1_projects:
             - 'sample_1/projects/**'
           sample_2:
             - 'sample_2/**'

@@ -2,30 +2,31 @@ name: Fahad's CI
 run-name: Name for the workflow generated
 on: [pull_request]
 jobs:
-  changes:
+  detect_changes_job:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
     outputs:
-      lib-one-output: ${{ steps.filter.outputs.lib-one }}
-      sample_2: ${{ steps.filter.outputs.sample_2 }}
-      changes_arr: ${{steps.filter.outputs.changes}}
+      lib_one_changed_bool: ${{ steps.services_filter.outputs.lib-one }}
+      detect_changes_job_arr: ${{steps.services_filter.outputs.changes}} # arr of libs (services) changed
     steps:
       - uses: actions/checkout@v3 # necessary?
-      - uses: dorny/paths-filter@v2
-        id: filter
+      - uses: dorny/paths-services_filter@v2
+        id: services_filter
         with:
           filters: |
-            lib-one:
+            lib-one: 
               - 'sample_1/libs/lib-one/**'
             lib-two:
               - 'sample_1/libs/lib-two/**'
-            sample_2:
-              - 'sample_2/**'
-      - run: echo "steps.filter ${{toJSON(steps.filter)}}"
 
   results:
-    needs: changes
+    needs: detect_changes_job # get detect_changes_job job result
+    if: needs.detect_changes_job.outputs.detect_changes_job_arr != '[]' # see if any services were changed
+    # strategy:
+    #   matrix:
+    #     service_to_test: ${{ fromJSON(needs.changes.outputs.detect_changes_job_arr) }}
+
     runs-on: ubuntu-latest
     steps:
-      - run: echo "changes output ${{toJSON(needs.changes.outputs)}}"
+      - run: echo "detect_changes_job output ${{toJSON(needs.detect_changes_job.outputs)}}"

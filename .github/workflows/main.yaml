@@ -1,0 +1,25 @@
+name: Fahad's CI
+run-name: Name for the workflow generated
+on: [push, pull_request]
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      sample_1: ${{ steps.filter.outputs.sample_1 }}
+      sample_2: ${{ steps.filter.outputs.sample_2 }}
+    steps:
+    - uses: actions/checkout@v3 # necessary?
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        filters: |
+          sample_1:
+            - 'sample_1/**'
+          sample_2:
+            - 'sample_2/**'
+    - run: echo "sample1 ${{steps.filter.outputs.sample_1}}"
+    - run: echo "sample2 ${{steps.filter.outputs.sample_2}}"
+
+

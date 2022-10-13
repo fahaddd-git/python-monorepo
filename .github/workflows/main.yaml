@@ -16,10 +16,9 @@ jobs:
       with:
         filters: |
           sample_1:
-            - 'sample_1/**'
+            - 'sample_1/libs/**'
+            - 'sample_1/projects/**'
           sample_2:
             - 'sample_2/**'
     - run: echo "sample1 ${{toJSON(steps.filter)}}"
-    - run: echo "sample2 ${{steps.filter.outputs.sample_2}}"
-
 

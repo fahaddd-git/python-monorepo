@@ -21,4 +21,11 @@ jobs:
             - 'sample_1/libs/lib-two/**'
           sample_2:
             - 'sample_2/**'
-    - run: echo "sample1 ${{toJSON(steps.filter)}}"
+    - run: echo "steps.filter ${{toJSON(steps.filter)}}"
+
+  results:
+    needs: changes
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "changes output ${{fromJSON(needs.changes.outputs)}}"
+

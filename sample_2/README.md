@@ -7,7 +7,7 @@ you have to install poetry 1.1.12 version
 ```bash
 cd python-monorepo/sample_2
 poetry install
-poetry run python -m api adfdfaf
+poetry run python -m api
 # access to localhost:8080/docs
 ``` 
 

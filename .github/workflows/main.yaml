@@ -17,8 +17,8 @@ jobs:
           filters: |
             lib-one: 
               - 'sample_1/libs/lib-one/**'
-            lib-two:
-              - 'sample_1/libs/lib-two/**'
+            logger:
+              - 'sample_1/libs/logger/**'
 
   results:
     needs: detect_changes_job # get detect_changes_job job result
@@ -56,7 +56,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: .venv
-          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/${{matrix.services_to_test}}/poetry.lock') }}
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/'${{matrix.services_to_test}}'/poetry.lock') }}
       #----------------------------------------------
       # install dependencies if cache does not exist
       #----------------------------------------------

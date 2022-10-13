@@ -55,7 +55,7 @@ jobs:
       #       load cached local
       #----------------------------------------------
       - name: Load cached .local
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v3
         with:
           path: ~/.local
           key: dotlocal-${{ runner.os }}-${{ hashFiles('.github/workflows/main.yml') }}

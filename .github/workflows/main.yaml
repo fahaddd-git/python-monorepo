@@ -9,6 +9,7 @@ jobs:
     outputs:
       lib-one-output: ${{ steps.filter.outputs.lib-one }}
       sample_2: ${{ steps.filter.outputs.sample_2 }}
+      changes_arr: ${{steps.filter.outputs.changes}}
     steps:
       - uses: actions/checkout@v3 # necessary?
       - uses: dorny/paths-filter@v2

@@ -22,5 +22,3 @@ jobs:
           sample_2:
             - 'sample_2/**'
     - run: echo "sample1 ${{toJSON(steps.filter)}}"
-    - run: echo "${{outputs.services}}}"
-

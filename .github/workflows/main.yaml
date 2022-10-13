@@ -25,7 +25,7 @@ jobs:
     if: needs.detect_changes_job.outputs.detect_changes_job_arr != '[]' # see if any services were changed
     strategy:
       matrix:
-        services_to_test: ${{ fromJSON(needs.changes.outputs.detect_changes_job_arr) }}
+        services_to_test: ${{ needs.changes.outputs.detect_changes_job_arr }}
 
     runs-on: ubuntu-latest
     steps:

@@ -7,7 +7,7 @@ jobs:
     permissions:
       pull-requests: read
     outputs:
-      sample_1_libs: ${{ steps.filter.outputs.sample_1_libs }}
+      services: ${{ steps.filter.outputs.sample_1_libs }}
       sample_2: ${{ steps.filter.outputs.sample_2 }}
     steps:
     - uses: actions/checkout@v3 # necessary?
@@ -22,4 +22,5 @@ jobs:
           sample_2:
             - 'sample_2/**'
     - run: echo "sample1 ${{toJSON(steps.filter)}}"
+    - run : echo "${{outputs.services}}}"
 

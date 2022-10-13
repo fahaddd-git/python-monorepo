@@ -15,10 +15,11 @@ jobs:
       id: filter
       with:
         filters: |
-          sample_1: sample_1
+          sample_1:
+            - 'sample_1/'
           sample_2:
             - 'sample_2/**'
-    - run: echo "sample1 ${{steps.filter.outputs.sample_1}}"
+    - run: echo "sample1 ${{  fromJSON(steps.filter.outputs.sample_1)  }}"
     - run: echo "sample2 ${{steps.filter.outputs.sample_2}}"
 
 

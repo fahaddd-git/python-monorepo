@@ -10,7 +10,7 @@ jobs:
       lib_one_changed_bool: ${{ steps.services_filter.outputs.lib-one }}
       detect_changes_job_arr: ${{steps.services_filter.outputs.changes}} # arr of libs (services) changed
     steps:
-      - uses: actions/checkout@v3 # necessary?
+      # - uses: actions/checkout@v3 # necessary? just uses github api to check what files changed
       - uses: dorny/paths-filter@v2
         id: services_filter
         with:
@@ -23,10 +23,52 @@ jobs:
   results:
     needs: detect_changes_job # get detect_changes_job job result
     if: needs.detect_changes_job.outputs.detect_changes_job_arr != '[]' # see if any services were changed
-    # strategy:
-    #   matrix:
-    #     service_to_test: ${{ fromJSON(needs.changes.outputs.detect_changes_job_arr) }}
+    strategy:
+      matrix:
+        services_to_test: ${{ fromJSON(needs.changes.outputs.detect_changes_job_arr) }}
 
     runs-on: ubuntu-latest
     steps:
       - run: echo "detect_changes_job output ${{toJSON(needs.detect_changes_job.outputs)}}"
+      #----------------------------------------------
+      #       check-out repo and set-up python
+      #----------------------------------------------
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - name: Set up python 3.10
+        id: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      #----------------------------------------------
+      #  -----  install & configure poetry  -----
+      #----------------------------------------------
+      - name: Install Poetry
+        uses: snok/install-poetry@v1.3.3
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+      #----------------------------------------------
+      #       load cached venv if cache exists
+      #----------------------------------------------
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/${{matrix.services_to_test}}/poetry.lock') }}
+      #----------------------------------------------
+      # install dependencies if cache does not exist
+      #----------------------------------------------
+      - name: Install dependencies
+        working-directory: ./sample_1/libs/${{matrix.services_to_test}}
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
+      #----------------------------------------------
+      # install your root project, if required
+      #----------------------------------------------
+      - name: Install library
+        working-directory: ./sample_1/libs/${{matrix.services_to_test}}
+        run: poetry install --no-interaction
+
+

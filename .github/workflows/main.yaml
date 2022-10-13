@@ -16,7 +16,7 @@ jobs:
       with:
         filters: |
           sample_1:
-            - 'sample_1/'
+            - 'sample_1/**'
           sample_2:
             - 'sample_2/**'
     - run: echo "sample1 ${{toJSON(steps.filter)}}"

@@ -59,6 +59,7 @@ jobs:
         with:
           path: .venv
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('$location') }}
+      - name: print location
         run: echo "$location"
       #----------------------------------------------
       # install dependencies if cache does not exist

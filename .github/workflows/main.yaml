@@ -11,7 +11,7 @@ jobs:
       detect_changes_job_arr: ${{steps.services_filter.outputs.changes}} # arr of libs (services) changed
     steps:
       - uses: actions/checkout@v3 # necessary?
-      - uses: dorny/paths-services_filter@v2
+      - uses: dorny/paths-filter@v2
         id: services_filter
         with:
           filters: |

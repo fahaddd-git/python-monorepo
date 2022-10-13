@@ -49,7 +49,7 @@ jobs:
         env:
           location: '**/${{matrix.services_to_test}}/poetry.lock'
         with:
-          path: ${{matrix.services_to_test}}/.venv
+          path: ./sample_1/libs/${{matrix.services_to_test}}/.venv
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
       #----------------------------------------------
       #       load cached local

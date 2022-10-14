@@ -5,10 +5,11 @@ description = ""
 authors = ["ya-mori <ppap.yohei.moriya@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.9"
+pytest-cov = "^4.0.0"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
+pytest = "^7.1.1"
 
 [build-system]
 requires = ["poetry>=0.12"]

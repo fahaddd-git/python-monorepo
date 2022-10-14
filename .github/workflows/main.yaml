@@ -47,10 +47,10 @@ jobs:
         id: cached-poetry-dependencies
         uses: actions/cache@v3
         env:
-          location: '**/${{matrix.services_to_test}}/poetry.lock'
+          LOCATION: '**/${{matrix.services_to_test}}/poetry.lock'
         with:
           path: ./sample_1/libs/${{matrix.services_to_test}}/.venv
-          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles(env.LOCATION) }}
       #----------------------------------------------
       #       load cached local
       #----------------------------------------------

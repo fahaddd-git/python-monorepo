@@ -115,7 +115,7 @@ jobs:
       - name: Run tests
         working-directory: ./sample_1/libs/${{matrix.services_to_test}}
         run: |
-          poetry run pytest --cov=./sample_1/libs/${{matrix.services_to_test}}
+          poetry run pytest --cov=${{matrix.services_to_test}} ./tests
 
   
       #----------------------------------------------

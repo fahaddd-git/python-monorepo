@@ -26,7 +26,7 @@ jobs:
         run: |
           # yamllint -d relaxed
           isort .  # --profile=black --filter-files
-          black .  # ./services --line-length=88 --check
+          black . --check  # ./services --line-length=88 --check
           flake8 . # --max-line-length=88 --extend-ignore=E203
         continue-on-error: true
 
@@ -111,6 +111,12 @@ jobs:
         working-directory: ./sample_1/libs/${{matrix.services_to_test}}
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install
+      
+      - name: Run tests
+        working-directory: ./sample_1/libs/${{matrix.services_to_test}}
+        run: |
+          poetry run pytest --cov=./sample_1/libs/${{matrix.services_to_test}}
+
   
       #----------------------------------------------
       #       Run CI on frontend

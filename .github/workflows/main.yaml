@@ -98,7 +98,7 @@ jobs:
         env:
           LOCKFILE_LOCATION: '**/${{matrix.services_to_test}}/poetry.lock' # workaround for using variable in the hashFiles function below
         with:
-          path: ./sample_1/libs/${{matrix.services_to_test}}/.venv
+          path: ~/.cache/pypoetry
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles(env.LOCKFILE_LOCATION) }}
 
       - name: Load cached .local

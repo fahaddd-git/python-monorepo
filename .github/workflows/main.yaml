@@ -97,8 +97,8 @@ jobs:
         with:
           repository: actions/cache
           ref: v3
-          path: .tmp/actions/cache
-          
+          path: ./.tmp/actions/cache
+
       - name: Make actions/cache@v3 run always, not only when job succeeds
         # Tweak `action.yml` of `actions/cache@v3` to remove its `post-if`
         # condition, making it default to `post-if: always()`.
@@ -107,7 +107,7 @@ jobs:
 
       - name: Load cached venv
         id: cached-poetry-dependencies
-        uses: .tmp/actions/cache
+        uses: ./.tmp/actions/cache
         env:
           LOCKFILE_LOCATION: '**/${{matrix.services_to_test}}/poetry.lock' # workaround for using variable in the hashFiles function below
         with:
@@ -115,7 +115,7 @@ jobs:
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles(env.LOCKFILE_LOCATION) }}
 
       - name: Load cached .local
-        uses: .tmp/actions/cache
+        uses: ./.tmp/actions/cache
         with:
           path: ~/.local
           key: dotlocal-${{ runner.os }}-${{ hashFiles('.github/workflows/main.yaml') }}

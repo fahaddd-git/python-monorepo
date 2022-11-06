@@ -6,35 +6,35 @@ jobs:
       #          install and run linters
       # https://github.com/marketplace/actions/install-poetry-action#testing-using-a-matrix
       #----------------------------------------------
-  python_linting:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
+  # python_linting:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Setup Python
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: '3.10'
 
-      - name: Load pip cache if it exists
-        uses: actions/cache@v3
-        id: code-quality-tools-cache
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip
-          restore-keys: ${{ runner.os }}-pip
+  #     - name: Load pip cache if it exists
+  #       uses: actions/cache@v3
+  #       id: code-quality-tools-cache
+  #       with:
+  #         path: ~/.cache/pip
+  #         key: ${{ runner.os }}-pip
+  #         restore-keys: ${{ runner.os }}-pip
 
-      - name: Install python code quality tools
-        if: steps.code-quality-tools-cache.outputs.cache-hit != 'true'
-        run: python -m pip install black flake8 isort yamllint
+  #     - name: Install python code quality tools
+  #       if: steps.code-quality-tools-cache.outputs.cache-hit != 'true'
+  #       run: python -m pip install black flake8 isort yamllint
 
 
-      - name: Run isort, black, & flake8
-        run: |
-          # yamllint -d relaxed
-          isort .  # --profile=black --filter-files
-          black . --check  # ./services --line-length=88 --check
-          flake8 . # --max-line-length=88 --extend-ignore=E203
-        continue-on-error: true
+  #     - name: Run isort, black, & flake8
+  #       run: |
+  #         # yamllint -d relaxed
+  #         isort .  # --profile=black --filter-files
+  #         black . --check  # ./services --line-length=88 --check
+  #         flake8 . # --max-line-length=88 --extend-ignore=E203
+  #       continue-on-error: true
 
 
       #----------------------------------------------
@@ -93,8 +93,8 @@ jobs:
           python-version: '3.10'
           cache: 'poetry'
           cache-dependency-path: |
-            **/lib_one/poetry.lock
-            **/lib_two/poetry.lock
+            **/${{matrix.services_to_test}}/poetry.lock
+            **/${{matrix.services_to_test}}/poetry.lock
 
 
 
@@ -137,34 +137,34 @@ jobs:
       # https://github.com/actions/setup-node#caching-global-packages-data
       #----------------------------------------------
   
-  run_ci_on_frontend:
-    needs: detect_changes_job # detect_changes_job result
-    if: needs.detect_changes_job.outputs.frontend_changed_bool == 'true'
-    runs-on: ubuntu-latest
-    steps:
+  # run_ci_on_frontend:
+  #   needs: detect_changes_job # detect_changes_job result
+  #   if: needs.detect_changes_job.outputs.frontend_changed_bool == 'true'
+  #   runs-on: ubuntu-latest
+  #   steps:
 
-      - name: Checkout repo
-        uses: actions/checkout@v3
+  #     - name: Checkout repo
+  #       uses: actions/checkout@v3
 
-      - name: Setup Node and cache npm dependencies
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
+  #     - name: Setup Node and cache npm dependencies
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 16
+  #         cache: 'npm'
+  #         cache-dependency-path: frontend/package-lock.json
 
-      - name: Load cached node_modules
-        id: cached-node-modules
-        uses: actions/cache@v3
-        with:
-          path: frontend/node_modules
-          key: node_modules-${{ hashFiles('frontend/package-lock.json') }}
+  #     - name: Load cached node_modules
+  #       id: cached-node-modules
+  #       uses: actions/cache@v3
+  #       with:
+  #         path: frontend/node_modules
+  #         key: node_modules-${{ hashFiles('frontend/package-lock.json') }}
 
-      - name: Install node_modules # if cache doesn't exist
-        working-directory: frontend
-        if: steps.cached-node-modules.outputs.cache-hit != 'true'
-        run: npm install
+  #     - name: Install node_modules # if cache doesn't exist
+  #       working-directory: frontend
+  #       if: steps.cached-node-modules.outputs.cache-hit != 'true'
+  #       run: npm install
 
-      - name: Test npm command
-        working-directory: frontend
-        run: npm test
+  #     - name: Test npm command
+  #       working-directory: frontend
+  #       run: npm test

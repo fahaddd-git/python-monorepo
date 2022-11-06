@@ -30,7 +30,7 @@ jobs:
 
       - name: Run isort, black, & flake8
         run: |
-          yamllint -d relaxed
+          # yamllint -d relaxed
           isort .  # --profile=black --filter-files
           black . --check  # ./services --line-length=88 --check
           flake8 . # --max-line-length=88 --extend-ignore=E203

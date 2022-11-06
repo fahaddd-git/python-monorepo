@@ -102,7 +102,7 @@ jobs:
 
       - name: Edit actions/cache manifest to always save
         run: |
-          sed 's/success/always/' .tmp/actions_cache/action.yml
+          sed -i 's/success/always/' .tmp/actions_cache/action.yml
 
       - name: Success changed
         run: | 

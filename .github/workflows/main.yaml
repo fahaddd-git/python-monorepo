@@ -1,27 +1,33 @@
-name: Fahad's CI
-run-name: Continuous Integration Pipeline
+name: Fahad's CI Worfklow
+run-name: CI
 on: [pull_request]
 jobs:
       #----------------------------------------------
       #          install and run linters
       # https://github.com/marketplace/actions/install-poetry-action#testing-using-a-matrix
       #----------------------------------------------
-  linting:
+  python_linting:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Setup Python
         uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
 
       - name: Load pip cache if it exists
         uses: actions/cache@v3
+        id: code-quality-tools-cache
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip
           restore-keys: ${{ runner.os }}-pip
 
       - name: Install python code quality tools
+        if: steps.code-quality-tools-cache.outputs.cache-hit != 'true'
         run: python -m pip install black flake8 isort yamllint
+
+
       - name: Run isort, black, & flake8
         run: |
           # yamllint -d relaxed
@@ -97,6 +103,7 @@ jobs:
 
       - name: Load cached .local
         uses: actions/cache@v3
+        id: local-cached
         with:
           path: ~/.local
           key: dotlocal-${{ runner.os }}-${{ hashFiles('.github/workflows/main.yaml') }}
@@ -114,8 +121,9 @@ jobs:
       
       - name: Run tests
         working-directory: ./sample_1/libs/${{matrix.services_to_test}}
+        # todo: add in coverage report
         run: |
-          poetry run pytest --cov=${{matrix.services_to_test}} ./tests
+          poetry run pytest --cov=${{matrix.services_to_test}} ./tests 
 
   
       #----------------------------------------------

@@ -20,8 +20,8 @@ jobs:
         id: code-quality-tools-cache
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip
-          restore-keys: ${{ runner.os }}-pip
+          key: ${{ runner.os }}-pip1
+          restore-keys: ${{ runner.os }}-pip1
 
       - name: Install python code quality tools
         if: steps.code-quality-tools-cache.outputs.cache-hit != 'true'
@@ -30,7 +30,7 @@ jobs:
 
       - name: Run isort, black, & flake8
         run: |
-          # yamllint -d relaxed
+          yamllint -d relaxed
           isort .  # --profile=black --filter-files
           black . --check  # ./services --line-length=88 --check
           flake8 . # --max-line-length=88 --extend-ignore=E203

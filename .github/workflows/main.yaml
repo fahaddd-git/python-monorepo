@@ -91,6 +91,10 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
+          cache: 'poetry'
+          cache-dependency-path: |
+            **/${{matrix.services_to_test}}/poetry.lock'
+
 
       - name: Load cached venv
         id: cached-poetry-dependencies
@@ -116,7 +120,7 @@ jobs:
 
       - name: Install project dependencies # if cache doesn't exist
         working-directory: ./sample_1/libs/${{matrix.services_to_test}}
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        # if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install
       
       - name: Run tests

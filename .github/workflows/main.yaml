@@ -86,27 +86,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
 
-      - name: Set up python 3.10
-        id: setup-python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-          cache: 'poetry'
-          cache-dependency-path: |
-            **/${{matrix.services_to_test}}/poetry.lock
-            **/${{matrix.services_to_test}}/poetry.lock
-
-
-
-      - name: Load cached venv
-        id: cached-poetry-dependencies
-        uses: actions/cache@v3
-        env:
-          LOCKFILE_LOCATION: '**/${{matrix.services_to_test}}/poetry.lock' # workaround for using variable in the hashFiles function below
-        with:
-          path: ~/.cache/pypoetry
-          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles(env.LOCKFILE_LOCATION) }}
-
+        
       - name: Load cached .local
         uses: actions/cache@v3
         id: local-cached
@@ -120,10 +100,34 @@ jobs:
           virtualenvs-create: true
           virtualenvs-in-project: true
 
+      - name: Set up python 3.10
+        id: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'poetry'
+          cache-dependency-path: |
+            **/${{matrix.services_to_test}}/poetry.lock
+            **/${{matrix.services_to_test}}/poetry.lock
+
+
+
+      # - name: Load cached venv
+      #   id: cached-poetry-dependencies
+      #   uses: actions/cache@v3
+      #   env:
+      #     LOCKFILE_LOCATION: '**/${{matrix.services_to_test}}/poetry.lock' # workaround for using variable in the hashFiles function below
+      #   with:
+      #     path: ~/.cache/pypoetry
+      #     key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles(env.LOCKFILE_LOCATION) }}
+
+
       - name: Install project dependencies # if cache doesn't exist
         working-directory: ./sample_1/libs/${{matrix.services_to_test}}
         # if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install
+        run: |
+          poetry env use "3.10"
+          poetry install
       
       - name: Run tests
         working-directory: ./sample_1/libs/${{matrix.services_to_test}}

@@ -92,9 +92,22 @@ jobs:
         with:
           python-version: '3.10'
 
+      - name: Checkout actions/cache@v3
+        uses: actions/checkout@v3
+        with:
+          repository: actions/cache
+          ref: v3
+          path: .tmp/actions/cache
+          
+      - name: Make actions/cache@v3 run always, not only when job succeeds
+        # Tweak `action.yml` of `actions/cache@v3` to remove its `post-if`
+        # condition, making it default to `post-if: always()`.
+        run: |
+          sed -i -e '/ post-if: /d' .tmp/actions/cache/action.yml
+
       - name: Load cached venv
         id: cached-poetry-dependencies
-        uses: actions/cache@v3
+        uses: .tmp/actions/cache
         env:
           LOCKFILE_LOCATION: '**/${{matrix.services_to_test}}/poetry.lock' # workaround for using variable in the hashFiles function below
         with:
@@ -102,7 +115,7 @@ jobs:
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles(env.LOCKFILE_LOCATION) }}
 
       - name: Load cached .local
-        uses: actions/cache@v3
+        uses: .tmp/actions/cache
         with:
           path: ~/.local
           key: dotlocal-${{ runner.os }}-${{ hashFiles('.github/workflows/main.yaml') }}
@@ -123,6 +136,10 @@ jobs:
         # todo: add in coverage report
         run: |
           poetry run pytest --cov=${{matrix.services_to_test}} ./tests 
+      
+      - name: failure
+        run: |
+          exit 1
 
   
       #----------------------------------------------

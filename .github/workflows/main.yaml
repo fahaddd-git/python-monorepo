@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - "test_branch2"
+      - "master"
 jobs:
       #----------------------------------------------
       #          install and run linters
@@ -51,6 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
+      contents: read
     outputs:
       lib_one_changed_bool: ${{ steps.services_filter.outputs.lib-one }}
       services_changed_arr: ${{steps.services_filter.outputs.changes}} # arr of libs (services) changed

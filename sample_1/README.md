@@ -5,7 +5,7 @@
 you have to install poetry 1.1.12 version
 
 ```bash
-cd python-monorepo/sample_1
+cd python-monorepo/sample_1 adffadfa
 poetry install
 ``` 
 

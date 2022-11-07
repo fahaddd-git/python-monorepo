@@ -58,7 +58,7 @@ jobs:
 
     steps:
       - name: checkout repo if push
-        if: $GITHUB_EVENT_NAME == "push"
+        if: ${{ github.event_name }} == "push"
         uses: actions/checkout@v3
 
       - name: Detect which/if any services changes

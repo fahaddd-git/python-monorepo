@@ -6,7 +6,7 @@ on:
       - "main"
   push:
     branches:
-      - "master"
+      - "test_branch2"
 jobs:
       #----------------------------------------------
       #          install and run linters

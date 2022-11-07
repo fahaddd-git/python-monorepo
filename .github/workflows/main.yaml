@@ -1,6 +1,12 @@
 name: Fahad's CI Worfklow
 run-name: CI
-on: [pull_request]
+on:
+  pull_request:
+    branches:
+      - "main"
+  push:
+    branches:
+      - "main"
 jobs:
       #----------------------------------------------
       #          install and run linters
@@ -51,6 +57,10 @@ jobs:
       frontend_changed_bool: ${{ steps.frontend_filter.outputs.frontend }}
 
     steps:
+      - name: checkout repo if push
+        if: ${{GITHUB_EVENT_NAME}} == "push"
+        uses: actions/checkout@v3
+
       - name: Detect which/if any services changes
         uses: dorny/paths-filter@v2
         id: services_filter
